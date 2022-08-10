@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [Darshik::class,'index']);
 Route::get('/shop', [Darshik::class,'shop']);
-Route::get('/detail', [Darshik::class,'detail']);
+Route::get('/detail/{id?}', [Darshik::class,'detail']);
 Route::get('/cart', [Darshik::class,'cart']);
 Route::get('/checkout', [Darshik::class,'checkout']);
 Route::get('/contact', [Darshik::class,'contact']);
@@ -32,6 +32,7 @@ route::post('/AddProduct',[Darshik::class,'AddProduct']);
 
 route::get('/DeleteProduct/{id}',[Darshik::class,'DeleteProduct']);
 route::get('/logout',[Darshik::class,'logout']);
+route::post('/addtocart',[Darshik::class,'addtocart']);
 
 
 

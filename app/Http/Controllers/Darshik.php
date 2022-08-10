@@ -7,6 +7,8 @@ use App\Models\users1;
 use Illuminate\Support\Facades\DB;
 use App\Models\products;
 use App\Models\pdetails;
+use App\Models\cart;
+use Illuminate\Testing\Constraints\CountInDatabase;
 
 class Darshik extends Controller
 {
@@ -20,9 +22,14 @@ class Darshik extends Controller
         return view('shop',$data);
     }
 
-    function detail(){
-        $items = products::all();
-        $data = compact('items');
+    function detail( $id = null ){
+
+        
+        $items = db::table('products')->where('id',$id)->first();
+
+        $itemdetails = db::table('pdetails')->where('Pid',$id)->first();
+        $data = compact('items','itemdetails');
+
         return view('detail',$data);
     }
 
@@ -187,8 +194,9 @@ class Darshik extends Controller
 
      function DeleteProduct($id){
 
-
+            DB::table('pdetails')->where('Pid',$id)->delete();
         $Query = DB::table('products')->where('id',$id)->delete();
+    
 
         return redirect('/ProductsTable');
 
@@ -199,6 +207,39 @@ class Darshik extends Controller
 
         session()->forget('User');
         return redirect('/login');
+
+     }
+
+     function addtocart(Request $req){
+
+
+        $qty = $req->qty;
+
+     
+
+        for($o = 1; $o <= $qty; $o++){
+    
+       $data = [
+
+        'Cid' => $req->Cid,
+        'Pid' => $req->Pid,
+
+       ];
+        
+       DB::table('cart')->insert($data);
+    }
+
+     $var =  cart::where('Cid',$req->Cid)->select('Cid')->get();
+
+     $CartCount = count($var);
+  
+
+    
+       
+
+       return response()->json(['code' => '200' , 'cartCount' => $CartCount]);
+
+       
 
      }
 }
